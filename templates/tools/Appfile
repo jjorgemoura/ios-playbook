@@ -1,0 +1,5 @@
+# itc_team_id ENV["XPTO"]      # iTunes Connect Team ID
+# team_id ENV["AUTHOR_APPLEID"]                     # Developer Portal Team ID
+
+# For more information about the Appfile, see:
+# https://docs.fastlane.tools/advanced/#appfile

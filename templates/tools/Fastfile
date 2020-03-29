@@ -1,0 +1,135 @@
+default_platform(:ios)
+
+platform :ios do
+
+  lane :resources do
+    swiftlint(
+              config_file: ".swiftlint.yml",
+              mode: :lint,
+              strict: true,
+              executable: "Pods/SwiftLint/swiftlint"
+    )
+  end
+
+  lane :unit_tests do
+    # slackMessage = "UnitTests on branch -> " + git_branch
+    run_tests(
+              devices: ["iPhone 11"],
+              scheme: ENV["PROJECT_UNIT_TESTS_SCHEME"],
+              clean: true,
+              code_coverage: true,
+              slack_url: ENV["SLACK_WEBHOOK_URL"],
+              slack_message: slackMessage
+    )
+    #xcov(
+    #    scheme: ENV["PROJECT_SCHEME"],
+    #    only_project_targets: true,
+    #    html_report: false,
+    #    slack_url: ENV["SLACK_WEBHOOK_URL"],
+    #    slack_message: "Code Coverage for LIVE_TOOLKIT:"
+    #)
+  end
+
+  lane :masterbuild do |options|
+    increment_build_number(build_number: options[:build_number])
+    build_internal
+    #slack_notes = "Hockey Master Build for Demo App -> " + get_version_number(target: ENV["SAMPLE_APP_SCHEME"]) + " (" + get_build_number + ")"
+    #slack(
+    #  message: slack_notes,
+    #  slack_url: ENV["SLACK_WEBHOOK_URL"]
+    #)
+  end
+
+  lane :documentation do |options|
+    git_current_branch = options[:current_branch]
+
+    if git_current_branch != "master"
+      puts "The DOCUMENTATION action needs to be executed in master. Current branch is not master!"
+      next
+    end
+
+    jazzy(config: ".jazzy.yaml")
+    commit_and_push_master
+  end
+  
+  lane :save_version_token do |options|
+
+    pr_version_message = options[:version_tag]
+    validate_version_token version_token:pr_version_message
+
+    Dir.chdir("..") do
+      File.write("version.txt", pr_version_message)
+    end
+  end
+
+  lane :update_version do
+
+    stored_version_token = ""
+    Dir.chdir("..") do
+      if (File.exist?('version.txt'))
+        File.open('version.txt') do |file|
+          stored_version_token = file.read().downcase
+        end
+      else 
+        UI.user_error!("File version.txt doesn't exist!!!")
+      end
+    end
+
+    do_version version_token:stored_version_token
+
+    Dir.chdir("..") do
+      File.delete('version.txt')
+    end
+
+    commit_and_push_master
+  end
+
+  private_lane :do_version do |option|
+      
+    validate_version_token version_token:option[:version_token]
+    increment_version_number(
+      bump_type: option[:version_token]
+    )
+  end
+
+  private_lane :validate_version_token do |option|
+      
+    version_token = option[:version_token]
+    if version_token != "patch" && version_token != "minor" && version_token != "major"
+      UI.user_error!("Version Token not valid!!!")
+    end
+  end
+
+  private_lane :commit_and_push_master do
+    
+    sh("git checkout --track origin/master")
+
+    git_pull
+    # git_add(path: "./docs/*", shell_escape: false)
+    # git_add(path: "version.txt", shell_escape: false)
+    git_commit(path: ["./version.txt", "./docs/*"], message: "NO_CI", allow_nothing_to_commit: true)
+    push_to_git_remote(
+      local_branch: "master",
+      remote_branch: "master",
+      no_verify: true
+    )
+  end
+
+  private_lane :build_internal do
+    build_app(
+              scheme: ENV["SAMPLE_APP_SCHEME"],
+              configuration: "Release",
+              export_method: "enterprise",
+              clean: true
+    )
+  end
+
+  error do |lane, exception, options|
+#    slack_notes = "Oops. There was a problem on iOS CI (LIVE_TOOLKIT) || Lane -> #{lane} || Exception -> #{exception}"
+#    slack(
+#      message: slack_notes,
+#      slack_url: ENV["SLACK_WEBHOOK_URL"],
+#      success: false
+#    )
+  end
+end
