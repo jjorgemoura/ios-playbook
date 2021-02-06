@@ -22,6 +22,25 @@ Probaby the first setup I do on a new Xcode project is set (reset) the version t
 
 I like to manipulate the version's increments automaticately, using build tools (fastlane). Fastlane relies on an Apple tool called `agvtool`. This usually requires some setup in build settings.
 
+By default the project is not in a good state to use the `agvtool`.
+
+Setup needed:
+
+- Enable agvtool
+  - Set `Current Project Version` to a value of your choosing
+
+    This is the build number. Current Project Version must be an integer or a floating point number such as 34.6. You should set this setting to 1 if you are working on a new project. This should be set att project level.
+
+  - Set `Versioning System` to `Apple Generic`
+
+- Set up your version and build numbers (on target's plist).
+  - Set `Bundle versions string, short` to app version, format x.y.z
+  - Set/Confirm `Bundle version` value, it should be the same as set before on `Current Project Version`
+
+I'm not sure if fastlane uses `agvtool` correctly. This because looking at Apple's documentation, the `Bundle version` should also be the app's version (x.y.z), not the build number.
+
+More info: https://developer.apple.com/library/content/qa/qa1827/_index.html
+
 ### Swiftlint
 
 This is a mandatory step. No questions asked. I tend to enable the max rules as possible.
