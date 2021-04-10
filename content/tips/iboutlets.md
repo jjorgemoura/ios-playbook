@@ -34,9 +34,11 @@ IBOutlets should be always `private`, unless some weird design is in place. Ther
 
 ## UI programatically
 
-This only happens when the UI is implemented with Nib files. In case the UI is done programmatically, typically the variables are strong and non-optional.
+All the previous discussion only applies to when the UI is implemented with Nib files. In case the UI is done programmatically, typically the variables are strong and non-optional.
 
-`private var someLabel = UILabel()`
+```swift
+private var someLabel = UILabel()
+```
 
 Eventually some variables could be optional if the UI requires that.
 
@@ -44,9 +46,15 @@ Eventually some variables could be optional if the UI requires that.
 
 From now on, my recommendation/preference is to use:
 
-`@IBOutlet private var someLabel: UILabel?`
+```swift
+@IBOutlet private var someLabel: UILabel?
+```
 
-However, I don't think it's wrong to use an `Implicitly Unwrapped Optional` as well.
+However, I don't think it's wrong to use an `Implicitly Unwrapped Optional` as well:
+
+```swift
+@IBOutlet private var someLabel: UILabel!
+```
 
 #### Resources:
 
