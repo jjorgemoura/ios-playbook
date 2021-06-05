@@ -75,3 +75,24 @@ The fasffile has 4 lanes:
 ### Github Actions
 
 This is still Work in Progress. I've worked on 3 main actions but they rely on fastlane. For github actions to run fastlane needs, first, to install it. That takes a significant amount of time. Thus, for now, I have decided to comment the actions.
+
+
+### Xcode Project Structure
+
+Having a well organized project structure helps understanding the project and navigating through all the files and sections of the codebase. It is, usually, a signal of the health state of the codebase.
+
+There is no magic solution here. There are multiple options. More important than choose the best option (or discuss what is "the best" option) is, instead, choose one and stick with it, in a consistent way. The key here is consistency.
+
+I like to organize in this way:
+
+- application
+  - applications` wide entities, such as Typography, Theming, Navigation (router), Model, Application-wide Actions and State and Environment
+
+- environemnt
+  - entities and services that are not application specific. Can also contain extensions, etc
+
+- features
+  - feature's main entities, such as Views, ViewModels, Actions, State, Environment, reducer
+
+- resources
+  - project's resources, such as `xcassets`, `storyboards`, etc.
