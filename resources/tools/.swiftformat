@@ -1,0 +1,17 @@
+#
+# -------- Swiftformat --------
+#
+
+#
+# -------- Configuration --------
+
+# options
+
+
+# file options
+--exclude docs
+
+
+# rules
+
+
