@@ -1,10 +1,16 @@
 # Xcode
 
+## Project Setup
+
+### Main App
 
 
 
+### Library
 
+The repo must have the library defined as a Swift Package Manager (SPM) and also have a subfolder (called `App`) for sample xcode apps.
 
+Some wiring inside Xcode is necessary.
 
 
 

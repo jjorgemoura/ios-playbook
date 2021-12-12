@@ -5,7 +5,10 @@
 #
 # -------- Configuration --------
 
-# options
+# format options
+
+# swift version
+--swiftversion 5.5
 
 
 # file options
@@ -13,5 +16,3 @@
 
 
 # rules
-
-
