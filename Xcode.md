@@ -8,13 +8,28 @@
 
 ### Library
 
-The repo must have the library defined as a Swift Package Manager (SPM) and also have a subfolder (called `App`) for sample xcode apps.
+The repo must have the library defined as a Swift Package Manager (SPM) and also have a subfolder (called `Apps`) for sample xcode apps.
 
 Some wiring inside Xcode is necessary.
 
+Steps:
 
+- Create SPM template
+  - Sources, Tests, package.swift
+- Create app with same name as the library.
+- Copy the new project into `Apps` folder.
+- Delete default target (that as the same name as the library) and create a new app target called `DemoApp`
+- Rename `main` file, to be just `DemoApp`.
+- Add local package to project and select the root folder.
+  - This adds the spm to project but inside a "packages" folder. Move the lib outside this folder and delete it.
+- Adjust file, entities and import naming if needed.
 
 ### Xcode Project Structure
+
+The structure of a main project is quite similar to the structure of a SPM library. Main difference is that instead of a `DemoApp` target we have the real app.
+
+
+
 
 Having a well organized project structure helps understanding the project and navigating through all the files and sections of the codebase. It is, usually, a signal of the health state of the codebase.
 
